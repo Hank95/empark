@@ -1,36 +1,77 @@
 import { useState } from "react";
 import styled from "styled-components";
-import LoginForm from "./LoginForm";
-import SignUpForm from "./SignUpForm";
+import { useAuth } from "../../contexts/AuthContext";
+import { Link, useNavigate } from "react-router-dom";
 
 function Login({ onLogin }) {
-  const [showLogin, setShowLogin] = useState(true);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
+  async function handleSubmit(e) {
+    e.preventDefault();
+
+    try {
+      setError("");
+      setLoading(true);
+      await login(email, password);
+      navigate("/directory");
+    } catch {
+      setError("Failed to log in");
+    }
+
+    setLoading(false);
+  }
   return (
     <>
       {/* <Image src={dock} alt="Dock" /> */}
       <Wrapper>
         {/* <Logo src={laurel} alt="logo" /> */}
         <h3>Please sign in!</h3>
-        {showLogin ? (
-          <>
-            <LoginForm onLogin={onLogin} />
-            <Divider />
-            <p>
-              New here? &nbsp;
-              <Button onClick={() => setShowLogin(false)}>Sign Up</Button>
-            </p>
-          </>
-        ) : (
-          <>
+        <form onSubmit={handleSubmit}>
+          <FormField>
+            <Label htmlFor="email">Email:</Label>
+            <Input
+              type="text"
+              id="email"
+              autoComplete="off"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </FormField>
+          <FormField>
+            <Label htmlFor="password">Password:</Label>
+            <Input
+              type="password"
+              id="password"
+              autoComplete="current-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </FormField>
+          <FormField>
+            <Button type="submit">{loading ? "Loading..." : "Login"}</Button>
+          </FormField>
+          <FormField>{error ? <Error>{error}</Error> : null}</FormField>
+        </form>{" "}
+        <Divider />
+        <p>
+          New here? &nbsp;
+          <Button as={Link} to="/signup">
+            Sign Up
+          </Button>
+        </p>
+        {/* <>
             <SignUpForm onLogin={onLogin} />
             <Divider />
             <p>
               Already have an account? &nbsp;
               <Button onClick={() => setShowLogin(true)}>Log In</Button>
             </p>
-          </>
-        )}
+          </> */}
       </Wrapper>
     </>
   );
@@ -75,6 +116,35 @@ const Button = styled.button`
     color: inherit;
     text-decoration: none;
   }
+`;
+const FormField = styled.div`
+  &:not(:last-child) {
+    margin-bottom: 12px;
+  }
+`;
+
+const Error = styled.div`
+  color: red;
+  font-size: 30px;
+`;
+
+const Label = styled.label`
+  color: #363636;
+  display: block;
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+`;
+const Input = styled.input`
+  border-radius: 6px;
+  border: 1px solid transparent;
+  border-color: #dbdbdb;
+  -webkit-appearance: none;
+  max-width: 100%;
+  width: 100%;
+  font-size: 1rem;
+  line-height: 1.5;
+  padding: 4px;
 `;
 
 export default Login;

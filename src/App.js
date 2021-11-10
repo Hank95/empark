@@ -1,10 +1,15 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { AuthProvider } from "./contexts/AuthContext";
+import AuthProvider from "./contexts/AuthContext";
 import PrivateRoute from "./components/PrivateRoute";
-import Home from "./components/Home";
+import Home from "./components/pages/Home";
+import About from "./components/pages/About";
+import Directory from "./components/pages/Directory";
+import Calendar from "./components/pages/Calendar";
+import Rules from "./components/pages/Rules";
+import Contractors from "./components/pages/Contractors";
 import Login from "./components/auth/Login";
-import Directory from "./components/Directory";
+import SignUp from "./components/auth/SignUp";
 import NavBar from "./components/NavBar";
 
 function App() {
@@ -22,7 +27,33 @@ function App() {
                 </PrivateRoute>
               }
             />
-            <Route path="/Login" element={<Login />} />
+            <Route
+              path="/calendar"
+              element={
+                <PrivateRoute>
+                  <Calendar />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/rules"
+              element={
+                <PrivateRoute>
+                  <Rules />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/contractors"
+              element={
+                <PrivateRoute>
+                  <Contractors />
+                </PrivateRoute>
+              }
+            />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="/about" element={<About />} />
             <Route exact path="/" element={<Home />} />
           </Routes>
         </AuthProvider>

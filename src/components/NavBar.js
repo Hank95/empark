@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { useAuth } from "../contexts/AuthContext";
 
 const NavBar = () => {
-  const { currentUser } = useAuth();
+  const { currentUser, logout } = useAuth();
   return (
     <div>
       <Nav>
@@ -27,6 +27,9 @@ const NavBar = () => {
             </GridItem>
             <GridItem>
               <Link to="/contractors">Recommended Contractors</Link>
+            </GridItem>
+            <GridItem>
+              <Button onClick={logout}>Log out</Button>
             </GridItem>
           </Container>
         ) : (
@@ -61,6 +64,23 @@ const Container = styled.div`
 const GridItem = styled.div`
   width: 100px;
   inherits: none;
+`;
+const Button = styled.button`
+  cursor: pointer;
+  font-size: 1.3rem;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  padding: 8px 16px;
+  text-decoration: none;
+  width: 100%;
+  background-color: rgb(58, 142, 216);
+  display: flex;
+  justify-content: center;
+  align-self: center;
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
 `;
 
 export default NavBar;

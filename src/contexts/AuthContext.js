@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { auth } from "../firebase";
+import { auth, db } from "../firebase";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -10,21 +10,26 @@ import {
   signOut,
   confirmPasswordReset,
 } from "firebase/auth";
+import {
+  collection,
+  query,
+  where,
+  getDoc,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  doc,
+  setDoc,
+} from "firebase/firestore";
 
-const AuthContext = createContext({
-  currentUser: null,
-  signInWithGoogle: () => Promise,
-  login: () => Promise,
-  register: () => Promise,
-  logout: () => Promise,
-  forgotPassword: () => Promise,
-  resetPassword: () => Promise,
-});
+const AuthContext = createContext();
 
 export const useAuth = () => useContext(AuthContext);
 
-export function AuthProvider({ children }) {
+export default function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(null);
+  const [userInfo, setUserInfo] = useState(null);
+  const usersCollectionRef = collection(db, "users");
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -37,14 +42,29 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     console.log("The user is", currentUser);
-  }, [currentUser]);
+    console.log("The user data is", userInfo.data());
+  }, [currentUser, userInfo]);
 
-  function login(email, password) {
-    return signInWithEmailAndPassword(auth, email, password);
+  async function login(email, password) {
+    let cred = await signInWithEmailAndPassword(auth, email, password);
+    let userDoc = await getDoc(doc(db, "users", cred.user.uid));
+    setUserInfo(userDoc);
   }
 
-  function register(email, password) {
-    return createUserWithEmailAndPassword(auth, email, password);
+  async function signup(email, password) {
+    // first find if input email matches approved email
+    const emailDoc = await getDoc(doc(db, "emails", email));
+
+    if (emailDoc.exists()) {
+      let cred = await createUserWithEmailAndPassword(auth, email, password);
+      let user = await setDoc(doc(db, "users", cred.user.uid), {
+        email: email,
+        admin: false,
+      });
+      setUserInfo(user);
+    } else {
+      console.log("not authenticated");
+    }
   }
 
   function forgotPassword(email) {
@@ -61,16 +81,10 @@ export function AuthProvider({ children }) {
     return signOut(auth);
   }
 
-  function signInWithGoogle() {
-    const provider = new GoogleAuthProvider();
-    return signInWithPopup(auth, provider);
-  }
-
   const value = {
     currentUser,
-    signInWithGoogle,
     login,
-    register,
+    signup,
     logout,
     forgotPassword,
     resetPassword,
