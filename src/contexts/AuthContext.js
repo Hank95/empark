@@ -42,7 +42,7 @@ export default function AuthProvider({ children }) {
 
   useEffect(() => {
     console.log("The user is", currentUser);
-    console.log("The user data is", userInfo.data());
+    // console.log("The user data is", userInfo.data());
   }, [currentUser, userInfo]);
 
   async function login(email, password) {
