@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { useAuth } from "../contexts/AuthContext";
 import userIcon from "./assets/images/userCircle.svg";
+import logo from "./assets/images/logo.svg";
 
 const NavBar = () => {
   const { currentUser, logout } = useAuth();
@@ -11,8 +12,9 @@ const NavBar = () => {
       <Nav>
         {currentUser ? (
           <>
+            <CenterLogo src={logo} alt="Eagles Mere Park Association" />
             <Container>
-              <Logo>Eagle Mere Park Association</Logo>
+              <Logo src={logo} alt="Eagles Mere Park Association" />
               <GridItem>
                 <Link to="/">Home</Link>
               </GridItem>
@@ -42,6 +44,8 @@ const NavBar = () => {
           </>
         ) : (
           <Container>
+            <Logo src={logo} alt="Eagles Mere Park Association" />
+
             <GridItem>
               <Link to="/">Home</Link>
             </GridItem>
@@ -59,28 +63,49 @@ const NavBar = () => {
 };
 
 const Nav = styled.nav`
-  height: 100px;
+  /* height: 100px; */
   width: 100%;
-  background-color: green;
+  background-color: rgb(82, 121, 111);
   /* position: relative;
   top: 0;
   left: 0; */
 `;
 const Container = styled.div`
+  height: 100px;
   display: flex;
   flex-direction: row;
   justify-content: start;
   align-items: center;
+  @media (max-width: 1075px) {
+    justify-content: flex-start;
+    height: 10%;
+  }
 `;
-const Logo = styled.div`
-  height: 100%;
-  font-family: "Times New Roman", Times, serif;
+const Logo = styled.img`
+  padding: 15px;
+  height: 75%;
+  @media (max-width: 1075px) {
+    display: none;
+  }
+`;
+const CenterLogo = styled.img`
+  margin: auto;
+  padding: 15px;
+  height: 75px;
+  @media (min-width: 1075px) {
+    display: none;
+  }
 `;
 const GridItem = styled.div`
+  display: flex;
   width: 100px;
+  height: 100%;
+  margin: 5px;
   inherits: none;
-  &:hover {
-    background-color: beige;
+  justify-content: center;
+  align-items: center;
+  &:hover a {
+    color: white;
   }
 `;
 const UserControl = styled.div`
