@@ -7,6 +7,7 @@ import About from "./components/pages/About";
 import Directory from "./components/pages/Directory";
 import Calendar from "./components/pages/Calendar";
 import Rules from "./components/pages/Rules";
+import Profile from "./components/pages/Profile";
 import Contractors from "./components/pages/Contractors";
 import Login from "./components/auth/Login";
 import SignUp from "./components/auth/SignUp";
@@ -48,6 +49,14 @@ function App() {
               element={
                 <PrivateRoute>
                   <Contractors />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <PrivateRoute>
+                  <Profile />
                 </PrivateRoute>
               }
             />
