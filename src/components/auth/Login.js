@@ -31,7 +31,7 @@ function Login({ onLogin }) {
       <Wrapper>
         {/* <Logo src={laurel} alt="logo" /> */}
         <h3>Please sign in!</h3>
-        <form onSubmit={handleSubmit}>
+        <Form onSubmit={handleSubmit}>
           <FormField>
             <Label htmlFor="email">Email:</Label>
             <Input
@@ -56,14 +56,14 @@ function Login({ onLogin }) {
             <Button type="submit">{loading ? "Loading..." : "Login"}</Button>
           </FormField>
           <FormField>{error ? <Error>{error}</Error> : null}</FormField>
-        </form>{" "}
+        </Form>
         <Divider />
-        <p>
+        <Details>
           New here? &nbsp;
           <Button as={Link} to="/signup">
             Sign Up
           </Button>
-        </p>
+        </Details>
         {/* <>
             <SignUpForm onLogin={onLogin} />
             <Divider />
@@ -90,9 +90,20 @@ const Wrapper = styled.section`
   background-color: white;
   border-radius: 6px;
   z-index: 10;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+const Form = styled.form`
+  /* align-content: center; */
+  width: 100%;
 `;
 const Logo = styled.img`
   margin-left: 13%;
+`;
+const Details = styled.div`
+  width: 100%;
 `;
 
 const Divider = styled.hr`
@@ -108,10 +119,11 @@ const Button = styled.button`
   padding: 8px 16px;
   text-decoration: none;
   width: 100%;
-  background-color: rgb(58, 142, 216);
+  background-color: #294c60;
   display: flex;
   justify-content: center;
   align-self: center;
+  color: #fff;
   a {
     color: inherit;
     text-decoration: none;

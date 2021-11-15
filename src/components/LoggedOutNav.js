@@ -1,9 +1,14 @@
 import React from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import logo from "./assets/images/logo.svg";
+import menu from "./assets/images/menu.svg";
+import login from "./assets/images/login.svg";
 
 const LoggedOutNav = () => {
+  const [clicked, setClicked] = useState(false);
+
   return (
     <>
       <Container>
@@ -17,6 +22,7 @@ const LoggedOutNav = () => {
         </GridItem>
         <GridItem>
           <Link to="/login">Login</Link>
+          {/* <img src={login} alt="login" /> */}
         </GridItem>
       </Container>
     </>
@@ -42,12 +48,21 @@ const GridItem = styled.div`
   display: flex;
   font-size: 1rem;
   font-weight: 600;
+  font-size: 1.2rem;
   width: 100px;
   height: 100%;
   margin: 5px;
   inherits: none;
   justify-content: center;
   align-items: center;
+  padding: 8px;
+  height: 30px;
+  border-radius: 6px;
+  &:hover {
+    background-color: #6d9c91;
+    box-shadow: 0px 5px 15px 5px rgba(0, 0, 0, 0.33);
+  }
+
   &:hover a {
     filter: brightness(1.2);
     color: white;
@@ -55,12 +70,14 @@ const GridItem = styled.div`
   &:last-child {
     margin-left: auto;
     margin-right: 25px;
-    padding: 8px;
-    &:hover a {
-      border-radius: 6px;
-      background-color: rgb(208, 207, 207);
+  }
+  @media (max-width: 645px) {
+    display: none;
+  }
+`;
 
-      color: black;
-    }
+const Burger = styled.img`
+  @media (min-width: 645px) {
+    display: none;
   }
 `;

@@ -32,18 +32,22 @@ export default function AuthProvider({ children }) {
   const usersCollectionRef = collection(db, "users");
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setCurrentUser(user ? user : null);
+
+      if (user) {
+        let userDoc = await getDoc(doc(db, "users", user.uid));
+        setUserInfo(userDoc);
+      }
     });
     return () => {
       unsubscribe();
     };
   }, []);
-
   useEffect(() => {
     console.log("The user is", currentUser);
     // console.log("The user data is", userInfo.data());
-  }, [currentUser, userInfo]);
+  }, [currentUser]);
 
   async function login(email, password) {
     let cred = await signInWithEmailAndPassword(auth, email, password);
