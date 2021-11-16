@@ -9,6 +9,7 @@ import Calendar from "./components/pages/Calendar";
 import Rules from "./components/pages/Rules";
 import Profile from "./components/pages/Profile";
 import Contractors from "./components/pages/Contractors";
+import ProfileForm from "./components/pages/ProfileForm";
 import Login from "./components/auth/Login";
 import SignUp from "./components/auth/SignUp";
 import NavBar from "./components/NavBar";
@@ -57,6 +58,14 @@ function App() {
               element={
                 <PrivateRoute>
                   <Profile />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/profile_form"
+              element={
+                <PrivateRoute>
+                  <ProfileForm />
                 </PrivateRoute>
               }
             />

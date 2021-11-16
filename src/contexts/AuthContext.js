@@ -37,7 +37,7 @@ export default function AuthProvider({ children }) {
 
       if (user) {
         let userDoc = await getDoc(doc(db, "users", user.uid));
-        setUserInfo(userDoc);
+        setUserInfo({ ...userDoc.data(), id: user.uid });
       }
     });
     return () => {
@@ -87,6 +87,7 @@ export default function AuthProvider({ children }) {
 
   const value = {
     currentUser,
+    userInfo,
     login,
     signup,
     logout,

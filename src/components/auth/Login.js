@@ -8,7 +8,7 @@ function Login({ onLogin }) {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const { login } = useAuth();
+  const { login, currentUser } = useAuth();
   const navigate = useNavigate();
 
   async function handleSubmit(e) {
@@ -18,12 +18,15 @@ function Login({ onLogin }) {
       setError("");
       setLoading(true);
       await login(email, password);
-      navigate("/directory");
+      navigate("/");
     } catch {
       setError("Failed to log in");
     }
 
     setLoading(false);
+  }
+  if (currentUser) {
+    navigate("/");
   }
   return (
     <>
