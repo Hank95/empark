@@ -1,7 +1,8 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import AuthProvider from "./contexts/AuthContext";
-import PrivateRoute from "./components/PrivateRoute";
+import PrivateRoute from "./components/routes/PrivateRoute";
+import LoggedinRoute from "./components/routes/LoggedinRoute";
 import Home from "./components/pages/Home";
 import About from "./components/pages/About";
 import Directory from "./components/pages/Directory";
@@ -12,6 +13,7 @@ import Contractors from "./components/pages/Contractors";
 import ProfileForm from "./components/pages/ProfileForm";
 import Login from "./components/auth/Login";
 import SignUp from "./components/auth/SignUp";
+import ForgotPassword from "./components/auth/ForgotPassword";
 import NavBar from "./components/NavBar";
 
 function App() {
@@ -69,8 +71,23 @@ function App() {
                 </PrivateRoute>
               }
             />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<SignUp />} />
+            <Route
+              path="/login"
+              element={
+                <LoggedinRoute>
+                  <Login />
+                </LoggedinRoute>
+              }
+            />
+            <Route
+              path="/signup"
+              element={
+                <LoggedinRoute>
+                  <SignUp />
+                </LoggedinRoute>
+              }
+            />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/about" element={<About />} />
             <Route exact path="/" element={<Home />} />
           </Routes>

@@ -3,74 +3,57 @@ import styled from "styled-components";
 import { useAuth } from "../../contexts/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 
-function Login({ onLogin }) {
+const ForgotPassword = () => {
+  const { forgotPassword } = useAuth();
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-  const { login, currentUser } = useAuth();
-  const navigate = useNavigate();
+  const [loading, setLoading] = useState("");
 
   async function handleSubmit(e) {
     e.preventDefault();
 
     try {
+      setMessage("");
       setError("");
       setLoading(true);
-      await login(email, password);
+      await forgotPassword(email);
+      setMessage("Check your inbox for further instructions");
     } catch {
-      setError("Failed to log in");
+      setError("Failed to reset password");
     }
 
     setLoading(false);
-    navigate("/");
   }
-  // if (currentUser) {
-  //   navigate("/");
-  // }
+
   return (
-    <>
-      {/* <Image src={dock} alt="Dock" /> */}
-      <Wrapper>
-        {/* <Logo src={laurel} alt="logo" /> */}
-        <h3>Please sign in!</h3>
-        <Form onSubmit={handleSubmit}>
-          <FormField>
-            <Label htmlFor="email">Email:</Label>
-            <Input
-              type="text"
-              id="email"
-              autoComplete="off"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </FormField>
-          <FormField>
-            <Label htmlFor="password">Password:</Label>
-            <Input
-              type="password"
-              id="password"
-              autoComplete="current-password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </FormField>
-          <FormField>
-            <Button type="submit">{loading ? "Loading..." : "Login"}</Button>
-          </FormField>
-          <FormField>{error ? <Error>{error}</Error> : null}</FormField>
-        </Form>
-        <Link to="/forgot-password"> Forgot Password?</Link>
-        <Divider />
-        <Details>
-          <Button as={Link} to="/signup">
-            Sign Up
+    <Wrapper>
+      {/* <Logo src={laurel} alt="logo" /> */}
+      <h3>Forgot Password?</h3>
+      <Form onSubmit={handleSubmit}>
+        <FormField>
+          <Label htmlFor="email">Email:</Label>
+          <Input
+            type="text"
+            id="email"
+            //   autoComplete="off"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </FormField>
+        <FormField>
+          <Button type="submit">
+            {loading ? "Loading..." : "Send Email Link"}
           </Button>
-        </Details>
-      </Wrapper>
-    </>
+        </FormField>
+        <FormField>{error ? <Error>{error}</Error> : null}</FormField>
+        <FormField>{message ? <Error>{message}</Error> : null}</FormField>
+      </Form>
+    </Wrapper>
   );
-}
+};
+
+export default ForgotPassword;
 
 const Wrapper = styled.section`
   position: relative;
@@ -147,5 +130,3 @@ const Input = styled.input`
   line-height: 1.5;
   padding: 4px;
 `;
-
-export default Login;

@@ -52,7 +52,7 @@ export default function AuthProvider({ children }) {
   async function login(email, password) {
     let cred = await signInWithEmailAndPassword(auth, email, password);
     let userDoc = await getDoc(doc(db, "users", cred.user.uid));
-    setUserInfo(userDoc);
+    setUserInfo({ ...userDoc.data(), id: cred.user.uid });
   }
 
   async function signup(email, password) {
@@ -61,11 +61,11 @@ export default function AuthProvider({ children }) {
 
     if (emailDoc.exists()) {
       let cred = await createUserWithEmailAndPassword(auth, email, password);
-      let user = await setDoc(doc(db, "users", cred.user.uid), {
+      let userDoc = await setDoc(doc(db, "users", cred.user.uid), {
         email: email,
         admin: false,
       });
-      setUserInfo(user);
+      setUserInfo(userDoc);
     } else {
       console.log("not authenticated");
     }
@@ -88,6 +88,7 @@ export default function AuthProvider({ children }) {
   const value = {
     currentUser,
     userInfo,
+    setUserInfo,
     login,
     signup,
     logout,

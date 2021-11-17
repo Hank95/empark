@@ -26,7 +26,7 @@ function SignUp() {
       await signup(email, password);
       navigate("/directory");
     } catch {
-      setError("Failed to create an account");
+      setError("Failed to create an account, please contact the administrator");
     }
 
     setLoading(false);
@@ -34,7 +34,7 @@ function SignUp() {
 
   return (
     <Wrapper>
-      <form onSubmit={handleSubmit}>
+      <Form onSubmit={handleSubmit}>
         <FormField>
           <Label htmlFor="email">Email</Label>
           <Input
@@ -69,36 +69,67 @@ function SignUp() {
           <Button type="submit">{loading ? "Loading..." : "Sign Up"}</Button>
         </FormField>
         <FormField>{error ? <Error>{error}</Error> : null}</FormField>
-      </form>
+      </Form>
       <Divider />
-      <p>
-        Already have an account? &nbsp;
+      <Details>
         <Button as={Link} to="/login">
           Log In
         </Button>
-      </p>
+      </Details>
     </Wrapper>
   );
 }
 
 const Wrapper = styled.section`
   position: relative;
-  max-width: 400px;
+  width: 50%;
   margin: 10vh auto;
   padding: 16px;
   background-color: white;
   border-radius: 6px;
   z-index: 10;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+const Form = styled.form`
+  /* align-content: center; */
+  width: 100%;
+`;
+
+const Details = styled.div`
+  width: 92%;
+`;
+
+const Divider = styled.hr`
+  width: 100%;
+  border-top: 1px solid #ccc;
+  margin: 16px 0 16px 0;
+`;
+const Button = styled.button`
+  cursor: pointer;
+  font-size: 1.3rem;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  padding: 8px 16px;
+  text-decoration: none;
+  width: 75%;
+  margin: 0 auto;
+  background-color: #294c60;
+  display: flex;
+  justify-content: center;
+  align-self: center;
+  color: #fff;
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
 `;
 const FormField = styled.div`
   &:not(:last-child) {
     margin-bottom: 12px;
   }
-`;
-const Divider = styled.hr`
-  border: none;
-  border-bottom: 1px solid #ccc;
-  margin: 16px 0 16px 0;
 `;
 
 const Error = styled.div`
@@ -123,24 +154,6 @@ const Input = styled.input`
   font-size: 1rem;
   line-height: 1.5;
   padding: 4px;
-`;
-
-const Button = styled.button`
-  cursor: pointer;
-  font-size: 1.3rem;
-  border: 1px solid transparent;
-  border-radius: 6px;
-  padding: 8px 16px;
-  text-decoration: none;
-  width: 100%;
-  background-color: rgb(58, 142, 216);
-  display: flex;
-  justify-content: center;
-  align-self: center;
-  a {
-    color: inherit;
-    text-decoration: none;
-  }
 `;
 
 export default SignUp;

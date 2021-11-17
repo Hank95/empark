@@ -2,12 +2,14 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { useAuth } from "../../contexts/AuthContext";
 import { db } from "../../firebase";
-import { updateDoc, doc, setDoc } from "@firebase/firestore";
+import { getDoc, doc, setDoc } from "@firebase/firestore";
+import { useNavigate } from "react-router-dom";
 
 const ProfileForm = () => {
-  const { userInfo } = useAuth();
+  const { userInfo, setUserInfo } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState([]);
+  const navigate = useNavigate();
 
   const [userData, setUserData] = useState({
     firstName: userInfo.firstName || "",
@@ -29,9 +31,15 @@ const ProfileForm = () => {
     setIsLoading(true);
     // const userDoc = doc(db, "users", userInfo.id);
     // await updateDoc(userDoc, userData);
-    await setDoc(doc(db, "users", userInfo.id), userData, { merge: true });
-    console.log(userData);
+    await setDoc(doc(db, "users", userInfo.id), userData, {
+      merge: true,
+    });
+
+    // console.log(newDoc.data());
+    let userDoc = await getDoc(doc(db, "users", userInfo.id));
+    setUserInfo({ ...userDoc.data() });
     setIsLoading(false);
+    navigate("/profile");
   };
   const handleChange = (e) => {
     setUserData({
