@@ -8,7 +8,7 @@ function Login({ onLogin }) {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const { login, currentUser } = useAuth();
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   async function handleSubmit(e) {
@@ -18,57 +18,51 @@ function Login({ onLogin }) {
       setError("");
       setLoading(true);
       await login(email, password);
+      navigate("/");
     } catch {
       setError("Failed to log in");
     }
 
     setLoading(false);
-    navigate("/");
   }
-  // if (currentUser) {
-  //   navigate("/");
-  // }
+
   return (
-    <>
-      {/* <Image src={dock} alt="Dock" /> */}
-      <Wrapper>
-        {/* <Logo src={laurel} alt="logo" /> */}
-        <h3>Please sign in!</h3>
-        <Form onSubmit={handleSubmit}>
-          <FormField>
-            <Label htmlFor="email">Email:</Label>
-            <Input
-              type="text"
-              id="email"
-              autoComplete="off"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </FormField>
-          <FormField>
-            <Label htmlFor="password">Password:</Label>
-            <Input
-              type="password"
-              id="password"
-              autoComplete="current-password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </FormField>
-          <FormField>
-            <Button type="submit">{loading ? "Loading..." : "Login"}</Button>
-          </FormField>
-          <FormField>{error ? <Error>{error}</Error> : null}</FormField>
-        </Form>
-        <Link to="/forgot-password"> Forgot Password?</Link>
-        <Divider />
-        <Details>
-          <Button as={Link} to="/signup">
-            Sign Up
-          </Button>
-        </Details>
-      </Wrapper>
-    </>
+    <Wrapper>
+      <h3>Please sign in!</h3>
+      <Form onSubmit={handleSubmit}>
+        <FormField>
+          <Label htmlFor="email">Email:</Label>
+          <Input
+            type="text"
+            id="email"
+            autoComplete="off"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </FormField>
+        <FormField>
+          <Label htmlFor="password">Password:</Label>
+          <Input
+            type="password"
+            id="password"
+            autoComplete="current-password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </FormField>
+        <FormField>
+          <Button type="submit">{loading ? "Loading..." : "Login"}</Button>
+        </FormField>
+        <FormField>{error ? <Error>{error}</Error> : null}</FormField>
+      </Form>
+      <Link to="/forgot-password"> Forgot Password?</Link>
+      <Divider />
+      <Details>
+        <Button as={Link} to="/signup">
+          Sign Up
+        </Button>
+      </Details>
+    </Wrapper>
   );
 }
 

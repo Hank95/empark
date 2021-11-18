@@ -4,9 +4,8 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 
 const Profile = () => {
-  const { currentUser, userInfo } = useAuth();
+  const { userInfo } = useAuth();
 
-  console.log(userInfo);
   return (
     <ProfileCard>
       <h1>Profile</h1>
@@ -41,7 +40,7 @@ const Profile = () => {
         <GridItem>Eagles Mere Address</GridItem>
         <GridItem>{userInfo.emAddress}</GridItem>
       </UserData>
-      <Button as={Link} to="/profile_form">
+      <Button as={Link} to="/profile-form">
         Update Information
       </Button>
     </ProfileCard>

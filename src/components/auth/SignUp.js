@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { useAuth } from "../../contexts/AuthContext";
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 function SignUp() {
   const [email, setEmail] = useState("");
@@ -9,7 +9,6 @@ function SignUp() {
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
 
   const { signup } = useAuth();
 
@@ -24,7 +23,6 @@ function SignUp() {
       setError("");
       setLoading(true);
       await signup(email, password);
-      navigate("/directory");
     } catch {
       setError("Failed to create an account, please contact the administrator");
     }

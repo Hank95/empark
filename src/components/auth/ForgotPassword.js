@@ -1,7 +1,7 @@
 import { useState } from "react";
 import styled from "styled-components";
 import { useAuth } from "../../contexts/AuthContext";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const ForgotPassword = () => {
   const { forgotPassword } = useAuth();
@@ -49,6 +49,7 @@ const ForgotPassword = () => {
         <FormField>{error ? <Error>{error}</Error> : null}</FormField>
         <FormField>{message ? <Error>{message}</Error> : null}</FormField>
       </Form>
+      <Link to="/login">Login</Link>
     </Wrapper>
   );
 };
