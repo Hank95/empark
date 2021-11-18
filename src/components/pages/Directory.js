@@ -19,12 +19,14 @@ const Directory = () => {
     getUsers();
   }, []);
 
+  console.log(users);
+
   return (
     <div>
       <h1>Directory</h1>
       <Rolladex>
         {users.map((user) => (
-          <ContactCard userDetals={user} />
+          <ContactCard key={user.id} userDetails={user} />
         ))}
       </Rolladex>
     </div>
