@@ -7,7 +7,7 @@ import SigninRoute from "./components/routes/SigninRoute";
 import Home from "./components/pages/Home";
 import About from "./components/pages/About";
 import Directory from "./components/pages/Directory";
-import Calendar from "./components/pages/Calendar";
+import CalendarPage from "./components/pages/CalendarPage";
 import Rules from "./components/pages/Rules";
 import Profile from "./components/pages/Profile";
 import Contractors from "./components/pages/Contractors";
@@ -37,7 +37,7 @@ function App() {
               path="/calendar"
               element={
                 <PrivateRoute>
-                  <Calendar />
+                  <CalendarPage />
                 </PrivateRoute>
               }
             />
