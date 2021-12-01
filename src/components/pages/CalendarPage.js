@@ -2,11 +2,13 @@ import format from "date-fns/format";
 import getDay from "date-fns/getDay";
 import parse from "date-fns/parse";
 import startOfWeek from "date-fns/startOfWeek";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Calendar, dateFnsLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { db } from "../../firebase";
+import { getDocs, addDoc, doc, collection } from "@firebase/firestore";
 
 const locales = {
   "en-US": require("date-fns/locale/en-US"),
@@ -39,19 +41,55 @@ const events = [
   {
     id: 6,
     title: "Meeting",
-    start: new Date(2021, 11, 23, 10, 30, 0, 0),
-    end: new Date(2021, 11, 23, 12, 30, 0, 0),
+    start: new Date(2021, 10, 23, 10, 30, 0, 0),
+    end: new Date(2021, 10, 23, 12, 30, 0, 0),
     desc: "Pre-meeting meeting, to prepare for the meeting",
   },
 ];
 
 function CalendarPage() {
   const [newEvent, setNewEvent] = useState({ title: "", start: "", end: "" });
-  const [allEvents, setAllEvents] = useState(events);
+  const [allEvents, setAllEvents] = useState([]);
+  const calendarCollectionRef = collection(db, "calendar");
 
-  function handleAddEvent() {
-    setAllEvents([...allEvents, newEvent]);
+  useEffect(() => {
+    const getEvents = async () => {
+      const data = await getDocs(calendarCollectionRef);
+
+      setAllEvents(
+        data.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+          start: doc.data().start.toDate(),
+          end: doc.data().end.toDate(),
+        }))
+      );
+    };
+
+    getEvents();
+  }, [calendarCollectionRef]);
+
+  //   const evenSum = (num) => {
+  //     let sum = 0;
+  //     for (let i = 0; i < 5; i++) {
+  //       console.log(num);
+  //       if (i % 2 === 0) {
+  //         sum += i;
+  //       }
+  //     }
+  //     console.log(sum);
+  //   };
+  //   evenSum(10);
+
+  async function handleAddEvent() {
+    let event = await addDoc(calendarCollectionRef, newEvent);
+
+    setAllEvents([...allEvents, event]);
   }
+
+  const handleNavigate = (e) => {
+    console.log(e);
+  };
 
   return (
     <div className="Calendar">
@@ -70,17 +108,23 @@ function CalendarPage() {
           style={{ marginRight: "10px" }}
           selected={newEvent.start}
           onChange={(start) => setNewEvent({ ...newEvent, start })}
+          showTimeSelect
+          dateFormat="Pp"
         />
         <DatePicker
           placeholderText="End Date"
           selected={newEvent.end}
           onChange={(end) => setNewEvent({ ...newEvent, end })}
+          showTimeSelect
+          dateFormat="Pp"
         />
         <button stlye={{ marginTop: "10px" }} onClick={handleAddEvent}>
           Add Event
         </button>
       </div>
       <Calendar
+        onNavigate={handleNavigate}
+        onView={handleNavigate}
         localizer={localizer}
         events={allEvents}
         startAccessor="start"
