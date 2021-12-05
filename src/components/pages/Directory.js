@@ -19,8 +19,6 @@ const Directory = () => {
     getUsers();
   }, []);
 
-  console.log(users);
-
   return (
     <div>
       <h1>Directory</h1>

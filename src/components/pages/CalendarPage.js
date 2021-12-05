@@ -69,18 +69,6 @@ function CalendarPage() {
     getEvents();
   }, [calendarCollectionRef]);
 
-  //   const evenSum = (num) => {
-  //     let sum = 0;
-  //     for (let i = 0; i < 5; i++) {
-  //       console.log(num);
-  //       if (i % 2 === 0) {
-  //         sum += i;
-  //       }
-  //     }
-  //     console.log(sum);
-  //   };
-  //   evenSum(10);
-
   async function handleAddEvent() {
     let event = await addDoc(calendarCollectionRef, newEvent);
 
