@@ -1,14 +1,16 @@
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
 import format from "date-fns/format";
 import getDay from "date-fns/getDay";
 import parse from "date-fns/parse";
 import startOfWeek from "date-fns/startOfWeek";
-import React, { useState, useEffect } from "react";
 import { Calendar, dateFnsLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { db } from "../../firebase";
 import { getDocs, addDoc, doc, collection } from "@firebase/firestore";
+import EventList from "./EventList";
 
 const locales = {
   "en-US": require("date-fns/locale/en-US"),
@@ -50,6 +52,7 @@ const events = [
 function CalendarPage() {
   const [newEvent, setNewEvent] = useState({ title: "", start: "", end: "" });
   const [allEvents, setAllEvents] = useState([]);
+  const [clicked, setClicked] = useState(false);
   const calendarCollectionRef = collection(db, "calendar");
 
   useEffect(() => {
@@ -67,7 +70,7 @@ function CalendarPage() {
     };
 
     getEvents();
-  }, [calendarCollectionRef]);
+  }, []);
 
   async function handleAddEvent() {
     let event = await addDoc(calendarCollectionRef, newEvent);
@@ -82,45 +85,85 @@ function CalendarPage() {
   return (
     <div className="Calendar">
       <h1>Calendar</h1>
-      <h2>Add New Event</h2>
-      <div>
-        <input
-          type="text"
-          placeholder="Add Title"
-          style={{ width: "20%", marginRight: "10px" }}
-          value={newEvent.title}
-          onChange={(e) => setNewEvent({ ...newEvent, title: e.target.value })}
+      <button onClick={() => setClicked(!clicked)}>
+        {clicked ? "Calendar View" : "List View"}
+      </button>
+      <CalendarInput>
+        <h2>Add New Event</h2>
+        <Inputs>
+          <input
+            type="text"
+            placeholder="Add Title"
+            // style={{ width: "20%", marginRight: "10px" }}
+            value={newEvent.title}
+            onChange={(e) =>
+              setNewEvent({ ...newEvent, title: e.target.value })
+            }
+          />
+          <DatePicker
+            placeholderText="Start Date"
+            style={{ marginRight: "10px" }}
+            selected={newEvent.start}
+            onChange={(start) => setNewEvent({ ...newEvent, start })}
+            showTimeSelect
+            dateFormat="Pp"
+          />
+          <DatePicker
+            placeholderText="End Date"
+            selected={newEvent.end}
+            onChange={(end) => setNewEvent({ ...newEvent, end })}
+            showTimeSelect
+            dateFormat="Pp"
+          />
+          <button stlye={{ marginTop: "10px" }} onClick={handleAddEvent}>
+            Add Event
+          </button>
+        </Inputs>
+      </CalendarInput>
+      {clicked ? (
+        <EventList events={allEvents} setAllEvents={setAllEvents} />
+      ) : (
+        <Calendar
+          onNavigate={handleNavigate}
+          onView={handleNavigate}
+          localizer={localizer}
+          events={allEvents}
+          startAccessor="start"
+          endAccessor="end"
+          style={{ height: 500, margin: "50px" }}
         />
-        <DatePicker
-          placeholderText="Start Date"
-          style={{ marginRight: "10px" }}
-          selected={newEvent.start}
-          onChange={(start) => setNewEvent({ ...newEvent, start })}
-          showTimeSelect
-          dateFormat="Pp"
-        />
-        <DatePicker
-          placeholderText="End Date"
-          selected={newEvent.end}
-          onChange={(end) => setNewEvent({ ...newEvent, end })}
-          showTimeSelect
-          dateFormat="Pp"
-        />
-        <button stlye={{ marginTop: "10px" }} onClick={handleAddEvent}>
-          Add Event
-        </button>
-      </div>
-      <Calendar
-        onNavigate={handleNavigate}
-        onView={handleNavigate}
-        localizer={localizer}
-        events={allEvents}
-        startAccessor="start"
-        endAccessor="end"
-        style={{ height: 500, margin: "50px" }}
-      />
+      )}
     </div>
   );
 }
 
 export default CalendarPage;
+
+const CalendarInput = styled.div`
+  margin: 0 auto;
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  h1 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+  }
+`;
+const Inputs = styled.div`
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  input {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  button {
+    width: 100%;
+    margin-top: 10px;
+  }
+`;
